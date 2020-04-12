@@ -1,11 +1,22 @@
 import React from 'react';
-import Button from 'react-bootstrap/Button';
-import ButtonGroup from 'react-bootstrap/ButtonGroup';
-import Form from 'react-bootstrap/Form';
+import { Button, ButtonGroup, Form } from 'react-bootstrap';
 
 class GameForm extends React.Component {
 
+  formValid = () => {
+      const {player_name, factor, problem_number} = this.props.newParams;
+      //TODO Find a better way to validate
+      return player_name !== "" && 
+            factor !== "" &&
+            factor >= 1 &&
+            factor <= 10 &&
+            problem_number !== "" &&
+            problem_number >= 1 &&
+            problem_number <= 10;
+  };
+
   render() {
+        
     return (
 
       <Form>
@@ -25,6 +36,8 @@ class GameForm extends React.Component {
           <Form.Control 
             name="factor"
             type="number" 
+            min="1" 
+            max="10"
             placeholder="Factor" 
             value={this.props.newParams.factor} 
             onChange={this.props.updateNew}
@@ -36,6 +49,8 @@ class GameForm extends React.Component {
           <Form.Control 
             name="problem_number"
             type="number" 
+            min="1" 
+            max="10"
             placeholder="Number of Problems" 
             value={this.props.newParams.problem_number}
             onChange={this.props.updateNew}
@@ -43,12 +58,12 @@ class GameForm extends React.Component {
           />
         </Form.Group> 
         <Form.Group>
-          <ButtonGroup aria-label="Basic example">
+          <ButtonGroup>
               <Button 
                 variant="secondary"
                 onClick={this.props.startGame}
+                disabled={!this.formValid()}
               >Start Game</Button>
-              <Button variant="secondary">Calculate Score</Button>
           </ButtonGroup>
         </Form.Group>
       </Form>

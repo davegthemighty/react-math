@@ -1,40 +1,76 @@
 import React from 'react';
 import './App.scss';
 import GameForm from '../GameForm/GameForm';
-import ProblemList from '../ProblemList/ProblemList';
+import Problems from '../Problems/Problems';
+import Scoreboard from '../Scoreboard/Scoreboard';
 
 class App extends React.Component {
 
   state = {
-    new: {
+    data: {
       player_name: "",
       factor: 5,
-      problem_number: undefined,
+      problem_number: "", 
     },
     current: {},
     completed: [],
   };
 
   handleUpdateNew = (event) => {
-      const target = event.target;
-      const name = target.name;
-      const value = target.value;
+      const { name, value } = event.target;
 
-      this.setState(previousState => ({
-        new: {
-          ...previousState.new,
+      this.setState(({data}) => ({
+        data: {
+          ...data,
           [name]: value
         }
       }));
   };
 
   handleStartGame = () => {
-      this.setState(previousState => ({
-          current: previousState.new
+      this.setState(({data}) => ({
+          current: Object.assign(
+            {results: Array.from({ length: data.problem_number })},
+            data
+          )
       }));
   };
 
+  handleSubmitAnswers = () => {
+
+      const {player_name, problem_number, results, factor} = this.state.current
+
+      this.setState(({completed}) => ({
+        completed: [...completed, {
+          player_name: player_name,
+          factor,
+          total_problems: problem_number,
+          correct_answers: results.filter((value, index) => 
+            factor * (index + 1) === parseInt(value)
+        ).length,
+        }]        
+      }));
+  };
+
+  handleUpdateAnswer = (event) => {
+
+    const resultIndex = event.target.getAttribute('result_index');
+    const value = event.target.value;
+      
+    this.setState(({current}) => {
+
+      const { results } = current;
+      results[resultIndex-1] = value;
+  
+      return { current: Object.assign(
+        current,
+        {results: results} 
+      )};
+    });
+  } 
+
   render() {
+    
     return (
       <div className="App">
         <header className="App-header">
@@ -43,11 +79,16 @@ class App extends React.Component {
         <GameForm 
             updateNew={this.handleUpdateNew}
             startGame={this.handleStartGame}
-            newParams={this.state.new}
+            newParams={this.state.data}
         />
-        <ProblemList 
+        <Problems
             currentParams={this.state.current} 
+            updateAnswer={this.handleUpdateAnswer}
+            submitAnswers={this.handleSubmitAnswers}
         />
+        <Scoreboard 
+            currentResults={this.state.completed} 
+        /> 
       </div>
     );
   }
