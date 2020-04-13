@@ -7,28 +7,15 @@ import Scoreboard from '../Scoreboard/Scoreboard';
 class App extends React.Component {
 
   state = {
-    data: {
-      player_name: "",
-      factor: 5,
-      problem_number: "", 
-    },
     current: {},
     completed: [],
   };
 
-  handleUpdateNew = (event) => {
-      const { name, value } = event.target;
+  handleStartGame = (data) => {
 
-      this.setState(({data}) => ({
-        data: {
-          ...data,
-          [name]: value
-        }
-      }));
-  };
+      console.log('aaa');
 
-  handleStartGame = () => {
-      this.setState(({data}) => ({
+      this.setState(() => ({
           current: Object.assign(
             {results: Array.from({ length: data.problem_number })},
             data
@@ -77,7 +64,6 @@ class App extends React.Component {
           {this.props.title}
         </header>
         <GameForm 
-            updateNew={this.handleUpdateNew}
             startGame={this.handleStartGame}
             newParams={this.state.data}
         />

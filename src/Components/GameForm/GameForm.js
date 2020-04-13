@@ -3,8 +3,27 @@ import { Button, ButtonGroup, Form } from 'react-bootstrap';
 
 class GameForm extends React.Component {
 
+  state = {
+    player_name: "",
+    factor: 5,
+    problem_number: "", 
+  }
+
+  handleUpdateSetting = (event) => {
+    const { name, value } = event.target;
+
+    this.setState(previousState => ({
+        ...previousState,
+        [name]: value
+    }));
+  };
+
+  startNewGame = () =>  {
+    this.props.startGame(this.state);
+  }
+  
   formValid = () => {
-      const {player_name, factor, problem_number} = this.props.newParams;
+      const {player_name, factor, problem_number} = this.state;
       //TODO Find a better way to validate
       return player_name !== "" && 
             factor !== "" &&
@@ -26,8 +45,8 @@ class GameForm extends React.Component {
             name="player_name"
             type="text" 
             placeholder="Player Name" 
-            value={this.props.newParams.player_name} 
-            onChange={this.props.updateNew}
+            value={this.state.player_name} 
+            onChange={this.handleUpdateSetting}
             required
           />
         </Form.Group>
@@ -39,8 +58,8 @@ class GameForm extends React.Component {
             min="1" 
             max="10"
             placeholder="Factor" 
-            value={this.props.newParams.factor} 
-            onChange={this.props.updateNew}
+            value={this.state.factor} 
+            onChange={this.handleUpdateSetting}
             required
           />
         </Form.Group>        
@@ -52,8 +71,8 @@ class GameForm extends React.Component {
             min="1" 
             max="10"
             placeholder="Number of Problems" 
-            value={this.props.newParams.problem_number}
-            onChange={this.props.updateNew}
+            value={this.state.problem_number}
+            onChange={this.handleUpdateSetting}
             required
           />
         </Form.Group> 
@@ -61,7 +80,7 @@ class GameForm extends React.Component {
           <ButtonGroup>
               <Button 
                 variant="secondary"
-                onClick={this.props.startGame}
+                onClick={this.startNewGame}
                 disabled={!this.formValid()}
               >Start Game</Button>
           </ButtonGroup>
