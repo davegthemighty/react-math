@@ -12,20 +12,14 @@ class App extends React.Component {
   };
 
   handleStartGame = (data) => {
-
-      console.log('aaa');
-
-      this.setState(() => ({
-          current: Object.assign(
-            {results: Array.from({ length: data.problem_number })},
-            data
-          )
-      }));
+      this.setState({
+          current: data
+      });
   };
 
-  handleSubmitAnswers = () => {
+  handleSubmitAnswers = (results) => {
 
-      const {player_name, problem_number, results, factor} = this.state.current
+      const {player_name, problem_number, factor} = this.state.current
 
       this.setState(({completed}) => ({
         completed: [...completed, {
@@ -38,23 +32,6 @@ class App extends React.Component {
         }]        
       }));
   };
-
-  handleUpdateAnswer = (event) => {
-
-    const resultIndex = event.target.getAttribute('result_index');
-    const value = event.target.value;
-      
-    this.setState(({current}) => {
-
-      const { results } = current;
-      results[resultIndex-1] = value;
-  
-      return { current: Object.assign(
-        current,
-        {results: results} 
-      )};
-    });
-  } 
 
   render() {
     
@@ -69,7 +46,6 @@ class App extends React.Component {
         />
         <Problems
             currentParams={this.state.current} 
-            updateAnswer={this.handleUpdateAnswer}
             submitAnswers={this.handleSubmitAnswers}
         />
         <Scoreboard 
